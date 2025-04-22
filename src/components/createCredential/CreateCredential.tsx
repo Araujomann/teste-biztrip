@@ -21,13 +21,13 @@ interface CreateCredentialProps {
 }
 
 interface Provider {
-    uuid: string
-name: string
-slug: string
-logo: string
-description:string
-service_type:string
-active:string
+    uuid: string;
+    name: string;
+    slug: string;
+    logo: string;
+    description: string;
+    service_type: string;
+    active: string;
 }
 
 const ModalOverlay = styled("div", {
@@ -99,10 +99,10 @@ const Label = styled("label", {
     fontSize: "14px",
     fontWeight: "500",
     marginBottom: "6px",
-    color: "#1a1a1a",
+    color: "#000",
 
     "& span": {
-        color: "#d97706", // laranja para "Obrigatório"
+        color: "#d97706", 
         marginLeft: "4px",
     },
 });
@@ -115,6 +115,7 @@ const Input = styled("input", {
     padding: "8px 12px",
     marginBottom: "16px",
     fontSize: "14px",
+    color: "#000",
     outlineColor: "#2563eb",
 });
 
@@ -173,7 +174,6 @@ export const CreateCredential: React.FC<CreateCredentialProps> = ({
         const fetchProviders = async () => {
             try {
                 const response = await api.get("/providers");
-                console.log("Provedores:", response.data);
                 setProviders(response.data);
             } catch (err) {
                 console.error("Erro ao buscar provedores:", err);
@@ -197,23 +197,35 @@ export const CreateCredential: React.FC<CreateCredentialProps> = ({
         setSelectedProvider(provider);
 
         try {
-            const res = await fetch(
+            const response = await api.get(
                 `/credentials/providers/${provider}/parameters`
             );
-            const data = await res.json();
 
-            const parsedParams = JSON.parse(data.parameters);
+            const data = response.data.data;
+
+            const parsedParams = data.parameters;
+            console.log("ParsedParams: ", parsedParams);
             const fields = Object.entries(parsedParams).map(
                 ([name, config]) => ({
                     name,
-                    label: (config as any).label,
+                    label: (config as any).title,
                     required: (config as any).required,
                 })
             );
+            console.log("Campos dinâmicos:", fields);
 
             setDynamicFields(fields);
-            setServiceTypes(data.service_types.split(","));
-        } catch (err) {
+
+            console.log("Tipos de serviço:", data.service_types);
+            if (Array.isArray(data.service_types)) {
+                setServiceTypes(data.service_types); 
+            } else if (typeof data.service_types === "string") {
+                setServiceTypes(data.service_types.split(","));  
+            } else {
+                setServiceTypes([]);  
+            }
+           
+        } catch (err: any) {
             console.error("Erro ao buscar parâmetros:", err);
         }
     };
@@ -265,7 +277,7 @@ export const CreateCredential: React.FC<CreateCredentialProps> = ({
                     >
                         <option value="">Selecione</option>
                         {providers.map((provider) => (
-                            <option key={provider.uuid} value={provider.slug}>
+                            <option key={provider.uuid} value={provider.uuid}>
                                 {provider.name}
                             </option>
                         ))}
