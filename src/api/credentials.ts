@@ -4,9 +4,10 @@ import { Credential, CredentialParameter, ProviderFields } from "./types";
 export const credentialService = {
     list: async (): Promise<Credential[]> => {
         const response = await api.get("/credentials");
-        return response.data.map((cred: Credential) => ({
+        console.log("RESP DO lIST: ", response.data.data);
+        return response.data.data.map((cred: Credential) => ({
             ...cred,
-            credential_values: JSON.parse(cred.credential_values),
+            credential_values: cred.credential_values,
         }));
     },
 
