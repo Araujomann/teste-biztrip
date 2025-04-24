@@ -9,10 +9,7 @@ export interface Credential {
     created_at: string;
   }
   export type ProviderFields = {
-    name: string;
-    type: 'text' | 'password' | 'number';
-    required?: boolean;
-    label?: string;
+    fields: string[];
   };
   
   // Atualize o FormData  

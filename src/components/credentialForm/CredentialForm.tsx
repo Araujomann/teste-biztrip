@@ -16,7 +16,7 @@ export const CredentialForm = ({ provider }: { provider: string }) => {
     const [error, setError] = useState<string | null>(null);
 
     const onSubmit = (data: FormData) => {
-        credentialService.create(provider, data).catch((err) => setError("Falha ao criar credencial"));
+        credentialService.create(provider, data).catch((err) => setError(err.message));
     };
 
     return (

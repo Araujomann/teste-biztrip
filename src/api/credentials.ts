@@ -27,7 +27,7 @@ export const credentialService = {
         const response = await api.get<Credential>(`/credentials/${id}`);
         return {
             ...response.data,
-            credential_values: JSON.parse(response.data.credential_values),
+            credential_values: JSON.parse(response.data.credential_uuid),
         };
     },
     
@@ -59,6 +59,6 @@ export const credentialService = {
         const response = await api.get<CredentialParameter>(
             `/credentials/providers/${provider}/parameters`
         );
-        return JSON.parse(response.data.parameters);
+        return JSON.parse(response.data.credential_parameter_uuid);
     },
 };
