@@ -11,7 +11,6 @@ export type ProviderFields = {
   fields: string[];
 };
 
-// Atualize o FormData
 export interface Provider {
   uuid: string;
   name: string;

@@ -4,8 +4,8 @@ import { Credential } from '../../api/types';
 import { styled } from '@stitches/react';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
-import { Pencil } from 'lucide-react'; // ícone de editar
-import { Switch, SwitchThumb } from '@radix-ui/react-switch'; // ou use algum switch estilizado
+import { Pencil } from 'lucide-react'; 
+import { Switch, SwitchThumb } from '@radix-ui/react-switch';
 
 const Container = styled('div', {
   padding: '1rem',
@@ -49,8 +49,8 @@ const StyledSwitch = styled(Switch, {
   all: 'unset',
   width: '40px',
   height: '20px',
-  backgroundColor: '#E6F0FF', // azul claro
-  border: '2px solid #0071CE', // azul médio
+  backgroundColor: '#E6F0FF', 
+  border: '2px solid #0071CE', 
   borderRadius: '9999px',
   position: 'relative',
   transition: 'background-color 0.2s',
@@ -70,7 +70,7 @@ const StyledSwitchThumb = styled(SwitchThumb, {
   justifyContent: 'center',
   width: '18px',
   height: '18px',
-  backgroundColor: '#0071CE', // azul escuro
+  backgroundColor: '#0071CE', 
   borderRadius: '9999px',
   boxShadow: '0 1px 2px rgba(0, 0, 0, 0.2)',
   transition: 'transform 0.2s',
@@ -85,7 +85,7 @@ const Label = styled('label', {
   marginLeft: '0.5rem',
   fontSize: '0.875rem',
   fontWeight: 500,
-  color: '#0071CE', // azul
+  color: '#0071CE', 
 });
 
 export const CredentialsList = () => {
@@ -141,7 +141,6 @@ export const CredentialsList = () => {
               id={`switch-${cred.credential_uuid}`}
             >
               <StyledSwitchThumb>
-                {/* Ícone branco dentro do thumb, se quiser, exemplo com um SVG check */}
                 <svg
                   width="10"
                   height="10"

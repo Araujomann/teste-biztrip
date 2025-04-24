@@ -1,4 +1,3 @@
-// src/pages/LoginPage.tsx
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -35,9 +34,9 @@ const Form = styled('form', {
 });
 
 const Logo = styled('img', {
-  width: '150px', // ou o tamanho que quiser
-  alignSelf: 'center', // centraliza horizontalmente no Form (que é flex)
-  marginBottom: '1rem', // espaço abaixo do logo
+  width: '150px', 
+  alignSelf: 'center', 
+  marginBottom: '1rem', 
 });
 
 const Input = styled('input', {

@@ -3,16 +3,12 @@ import ReactDOM from 'react-dom/client';
 import { App } from './App';
 import './index.css';
 
-// 1. Configuração do Stitches (CSS-in-JS)
 import { globalCss } from './styles/stitches.config';
 
-// 2. Configuração do React Query (Data Fetching)
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-// 3. Configuração do Radix (Acessibilidade)
 import * as Radix from '@radix-ui/react-dialog';
 
-// Estilos globais do Stitches
 const globalStyles = globalCss({
   body: {
     fontFamily: '$system',
@@ -24,16 +20,14 @@ const globalStyles = globalCss({
   },
 });
 
-// Criação do cliente do React Query
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      refetchOnWindowFocus: false, // Otimização para desenvolvimento
+      refetchOnWindowFocus: false, 
     },
   },
 });
 
-// Aplica os estilos globais
 globalStyles();
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
