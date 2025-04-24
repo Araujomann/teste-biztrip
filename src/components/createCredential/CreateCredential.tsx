@@ -4,6 +4,7 @@ import { styled } from "@stitches/react";
 import { X } from "lucide-react";
 
 interface DynamicField {
+    uuid: string;
     name: string;
     label: string;
     required: boolean;
@@ -102,7 +103,7 @@ const Label = styled("label", {
     color: "#000",
 
     "& span": {
-        color: "#d97706", 
+        color: "#d97706",
         marginLeft: "4px",
     },
 });
@@ -208,6 +209,7 @@ export const CreateCredential: React.FC<CreateCredentialProps> = ({
             const fields = Object.entries(parsedParams).map(
                 ([name, config]) => ({
                     name,
+                    uuid: (config as any).uuid,
                     label: (config as any).title,
                     required: (config as any).required,
                 })
@@ -218,13 +220,12 @@ export const CreateCredential: React.FC<CreateCredentialProps> = ({
 
             console.log("Tipos de serviço:", data.service_types);
             if (Array.isArray(data.service_types)) {
-                setServiceTypes(data.service_types); 
+                setServiceTypes(data.service_types);
             } else if (typeof data.service_types === "string") {
-                setServiceTypes(data.service_types.split(","));  
+                setServiceTypes(data.service_types.split(","));
             } else {
-                setServiceTypes([]);  
+                setServiceTypes([]);
             }
-           
         } catch (err: any) {
             console.error("Erro ao buscar parâmetros:", err);
         }
@@ -240,22 +241,21 @@ export const CreateCredential: React.FC<CreateCredentialProps> = ({
             return;
         }
 
-        const credential_values = JSON.stringify(
-            dynamicFields.reduce((acc, field) => {
-                acc[field.name] = formData[field.name];
-                return acc;
-            }, {} as Record<string, string>)
-        );
+        const parameters = dynamicFields.map((field) => ({
+            credential_parameter_uuid: field.uuid,
+            value: formData[field.name] || "",
+        }));
 
         const payload = {
             description: formData.name,
-            provider: selectedProvider,
             service_type: formData.type,
-            active: true,
-            credential_values,
+            parameters,
         };
 
-        onSubmit(payload);
+        onSubmit({
+            provider: selectedProvider,
+            data: payload
+        });
     };
 
     return (

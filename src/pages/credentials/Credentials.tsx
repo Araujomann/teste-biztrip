@@ -3,6 +3,7 @@ import { CredentialsList } from "../../components/credentialList/CredentialList"
 import { Header } from "../../components/header/Header";
 import { useLocation, useNavigate } from "react-router-dom";
 import { CreateCredential } from "../../components/createCredential/CreateCredential";
+import { api } from "../../api/api";
 
 const Container = styled("div", {
     width: "100vw",
@@ -20,8 +21,20 @@ export function Credentials() {
     const handleOpen = () => navigate("/credentials/create");
     const handleClose = () => navigate("/credentials");
 
-    const handleCreate = (data: any) => {
-        console.log("Dados para criar credencial: ", data);
+    const handleCreate = async ({provider, data }: {provider: string; data: any}) => {
+    console.log("Enviando para o backend: ", data)
+
+    try {
+        const response = await api.post(`/credentials/providers/${provider}`, data)
+        console.log("Credencial criada com sucesso: ", response.data)
+        handleClose(); 
+        handleClose();
+window.location.reload();
+
+
+    } catch (error: any) {
+        console.error("Erro ao criar credencial:", error);
+    }
     };
 
     return (

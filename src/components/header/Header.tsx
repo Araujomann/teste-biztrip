@@ -1,7 +1,5 @@
 import { styled } from "@stitches/react";
 import { MagnifyingGlassIcon, PlusIcon } from "@radix-ui/react-icons";
-import { CreateCredential } from "../createCredential/CreateCredential";
-import { useState } from "react";
 
 const HeaderContainer = styled("header", {
     display: "flex",

@@ -61,6 +61,10 @@ const Button = styled("button", {
     opacity: 0.6,
     cursor: "not-allowed",
   },
+  "&:hover": {
+    backgroundColor: "#005bb5",
+  },
+   
 })
 
 const ErrorText = styled("p", {
