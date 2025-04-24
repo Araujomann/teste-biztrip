@@ -1,4 +1,5 @@
-{"compilerOptions": {
+{
+  "compilerOptions": {
     "baseUrl": "./", // Define a raiz do projeto
     "paths": {
       "@/*": ["./*"] // Define o alias @ para a raiz do projeto
@@ -8,7 +9,5 @@
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
-  ],
-  
-  
+  ]
 }

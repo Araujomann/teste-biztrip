@@ -1,9 +1,8 @@
-import { api } from "./api";
-import { User } from "./types";
+import { api } from './api';
 
 export const userService = {
-    me: async (): Promise<User> => {
-        const response = await api.get<User>("/me");
-        return response.data;
-    },
+  me: async (): Promise<any> => {
+    const response = await api.get('/me');
+    return response.data;
+  },
 };
