@@ -7,7 +7,6 @@ export const authService = {
             email,
             password,
         });
-        console.log("AAAAAAAAAAAA",response.data.token);
         storage.saveToken(response.data.token.value);
         return response.data.token;
     },

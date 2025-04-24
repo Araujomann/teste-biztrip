@@ -3,114 +3,175 @@ import { credentialService } from "../../api/credentials";
 import { Credential } from "../../api/types";
 import { styled } from "@stitches/react";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import { Pencil } from "lucide-react"; // ícone de editar
+import { Switch, SwitchThumb } from "@radix-ui/react-switch"; // ou use algum switch estilizado
 
 const Container = styled("div", {
-  padding: "1rem",
+    padding: "1rem",
 });
 
-const Title = styled("h1", {
-  fontSize: "$xl",
-  fontWeight: "600",
-  marginBottom: "1.5rem",
+const Table = styled("div", {
+    display: "grid",
+    gridTemplateColumns: "1fr 2fr 2fr 2fr auto auto",
+    alignItems: "center",
+    padding: "0.75rem 1rem",
+    border: "2px solid #0064c6",
+    borderRadius: "8px",
+    backgroundColor: "#fff",
+    gap: "0.5rem",
+    marginBottom: "1rem",
+    boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
 });
 
-const CredentialCard = styled("li", {
-  border: "1px solid $gray200",
-  padding: "1rem",
-  borderRadius: "$md",
-  boxShadow: "0 1px 4px rgba(0,0,0,0.05)",
-  backgroundColor: "$gray100",
+const Text = styled("span", {
+    fontSize: "0.875rem",
+    color: "#555",
 });
 
-const ProviderName = styled("h2", {
-  fontSize: "$lg",
-  fontWeight: "bold",
-  marginBottom: "0.25rem",
+const Bold = styled(Text, {
+    fontWeight: "600",
 });
 
-const Status = styled("span", {
-  variants: {
-    active: {
-      true: { color: "$green" },
-      false: { color: "$red" },
+const IconButton = styled("button", {
+    background: "transparent",
+    border: "none",
+    cursor: "pointer",
+    padding: "0.25rem",
+    color: "#555",
+
+    "&:hover": {
+        color: "#000",
     },
-  },
 });
 
-const Actions = styled("div", {
-  display: "flex",
-  gap: "0.5rem",
-  marginTop: "0.5rem",
-});
+const StyledSwitch = styled(Switch, {
+    all: "unset",
+    width: "40px",
+    height: "20px",
+    backgroundColor: "#E6F0FF", // azul claro
+    border: "2px solid #0071CE", // azul médio
+    borderRadius: "9999px",
+    position: "relative",
+    transition: "background-color 0.2s",
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
 
-const Button = styled("button", {
-  padding: "0.5rem 1rem",
-  borderRadius: "$md",
-  variants: {
-    variant: {
-      primary: { backgroundColor: "$blue", color: "white" },
-      danger: { backgroundColor: "$red", color: "white" },
+    '&[data-state="unchecked"]': {
+        backgroundColor: "#fff",
+        border: "2px solid #ccc",
     },
-  },
 });
 
-export function CredentialsList() {
-  const queryClient = useQueryClient();
-  const { data, isLoading, isError } = useQuery<Credential[]>({
-    queryKey: ["credentials"],
-    queryFn: credentialService.list,
-  });
+const StyledSwitchThumb = styled(SwitchThumb, {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "18px",
+    height: "18px",
+    backgroundColor: "#0071CE", // azul escuro
+    borderRadius: "9999px",
+    boxShadow: "0 1px 2px rgba(0, 0, 0, 0.2)",
+    transition: "transform 0.2s",
+    transform: "translateX(2px)",
 
-  // Mutação para ativar/inativar
-  const { mutate: toggleStatus } = useMutation({
-    mutationFn: (cred: Credential) =>
-      credentialService.toggleStatus(
-        cred.credential_wuid,
-        cred.active ? "inactive" : "active"
-      ),
-    onSuccess: () => {
-      toast.success("Status alterado!");
-      queryClient.invalidateQueries({ queryKey: ["credentials"] });
+    '[data-state="checked"] &': {
+        transform: "translateX(20px)",
     },
-    onError: () => toast.error("Falha ao alterar status"),
-  });
+});
 
-  if (isLoading) return <p>Carregando credenciais...</p>;
-  if (isError) return <p>Erro ao carregar credenciais 😓</p>;
+const Label = styled("label", {
+    marginLeft: "0.5rem",
+    fontSize: "0.875rem",
+    fontWeight: 500,
+    color: "#0071CE", // azul
+});
 
-  return (
-    <Container>
-      <Title>Credenciais</Title>
-      <ul style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-        {data?.map((cred) => (
-          <CredentialCard key={cred.credential_wuid}>
-            <ProviderName>
-              {cred.provider.name}
-              {cred.description ? ` - ${cred.description}` : ""}
-            </ProviderName>
-            <p>
-              <strong>Status:</strong>{" "}
-              <Status active={cred.active}>
-                {cred.active ? "Ativa" : "Inativa"}
-              </Status>
-            </p>
-            <p>
-              <strong>Tipo de serviço:</strong> {cred.service_type ?? "N/A"}
-            </p>
-            
-            {/* Botões de Ação */}
-            <Actions>
-              <Button variant="primary">Editar</Button>
-              <Button 
-                variant="danger" 
-                onClick={() => toggleStatus(cred)}
-              >
-                {cred.active ? "Inativar" : "Ativar"}
-              </Button>
-            </Actions>
-          </CredentialCard>
-        ))}
-      </ul>
-    </Container>
-  );
+export const  CredentialsList = () =>  {
+    const queryClient = useQueryClient();
+    const navigate = useNavigate();
+    const { data, isLoading, isError } = useQuery<Credential[]>({
+        queryKey: ["credentials"],
+        queryFn: credentialService.list,
+    });
+
+    const { mutate: toggleStatus } = useMutation({
+        mutationFn: (cred: Credential) =>
+            credentialService.toggleStatus(
+                cred.credential_wuid,
+                cred.active ? "inactive" : "active"
+            ),
+        onSuccess: () => {
+            toast.success("Status alterado!");
+            queryClient.invalidateQueries({ queryKey: ["credentials"] });
+        },
+        onError: () => toast.error("Falha ao alterar status"),
+    });
+
+    if (isLoading) return <p>Carregando credenciais...</p>;
+    if (isError || !data) return <p>Erro ao buscar credenciais.</p>;
+    if (data.length === 0) return <p>Nenhuma credencial encontrada.</p>;
+
+    return (
+        <Container>
+            {data.map((cred) => (
+                <Table key={cred.credential_wuid}>
+                    <Text>{cred.description ?? "—"}</Text>
+                    <Bold>{cred.provider?.name ?? "—"}</Bold>
+                    <Text>{cred.service_type ?? "—"}</Text>
+                    <IconButton
+                        onClick={() =>
+                            navigate(
+                                `/credenciais/${cred.credential_wuid}/editar`
+                            )
+                        }
+                    >
+                        <Pencil size={18} />
+                    </IconButton>
+                    <Label
+                        htmlFor={`switch-${cred.credential_wuid}`}
+                        style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "0.5rem",
+                        }}
+                    >
+                        <StyledSwitch
+                            checked={cred.active}
+                            onCheckedChange={() => toggleStatus(cred)}
+                            id={`switch-${cred.credential_wuid}`}
+                        >
+                            <StyledSwitchThumb>
+                                {/* Ícone branco dentro do thumb, se quiser, exemplo com um SVG check */}
+                                <svg
+                                    width="10"
+                                    height="10"
+                                    viewBox="0 0 10 10"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path
+                                        d="M2 5L4 7L8 3"
+                                        stroke="white"
+                                        strokeWidth="1.5"
+                                        strokeLinecap="round"
+                                    />
+                                </svg>
+                            </StyledSwitchThumb>
+                        </StyledSwitch>
+                        <span
+                            style={{
+                                color: "#333",
+                                fontSize: "0.875rem",
+                                fontWeight: 500,
+                            }}
+                        >
+                            {cred.active ? "Ativo" : "Inativo"}
+                        </span>
+                    </Label>
+                </Table>
+            ))}
+        </Container>
+    );
 }

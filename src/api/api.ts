@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const api = axios.create({
-    baseURL: "https://blessed-butterfly-iiwpx0r4geze.on-vapor.com/api/v1/",
+    baseURL: "https://blessed-butterfly-iiwpx0r4geze.on-vapor.com/api/v1",
 })
 
 api.interceptors.request.use((config) => {
